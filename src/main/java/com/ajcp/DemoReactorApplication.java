@@ -18,7 +18,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class DemoReactorApplication implements CommandLineRunner {
@@ -96,12 +99,44 @@ public class DemoReactorApplication implements CommandLineRunner {
 		//app.defaultIfEmpty();
 		//app.takeUntil();
 		//app.timeout();
-		Math app = new Math();
+		//Math app = new Math();
 		//app.average();
 		//app.count();
 		//app.min();
 		//app.sum();
-		app.summarizing();
+		//app.summarizing();
 
+
+		Persona person1 = new Persona(1, "Andres", 21);
+		Persona person2 = new Persona(2, "Jimena", 23);
+		Persona person3 = new Persona(3, "Juan", 19);
+		List<Persona> persons = Arrays.asList(person1, person2, person3);
+
+		List<Persona> filtrado = persons.stream()
+									.filter(p -> p.getNombre().startsWith("A"))
+									.filter(p -> p.getEdad() > 20)
+									.collect(Collectors.toList());
+		printList(filtrado);
+
+		Function<String, String> coderFunction = name -> "Coder " + name;
+		List<String> filteredList2 = persons.stream()
+				//.filter(p -> App.getAge(p.getBirthDate()) >= 18)
+				//.map(p -> App.getAge(p.getBirthDate()))
+				//.map(p -> "Coder " + p.getName())
+				//.map(p-> p.getName())
+				.map(Persona::getNombre)
+				//.map(coderFunction)
+				.collect(Collectors.toList());
+
+		List<Integer> filteredList3 = persons.stream()
+						.map(p -> p.getEdad())
+				.collect(Collectors.toList());
+		printList(filteredList2);
+
+
+	}
+
+	public static void printList(List<?> list) {
+		list.forEach(item -> log.info(item.toString()));
 	}
 }
